@@ -14,15 +14,16 @@ const createBlankMaze = (mazeHeight, mazeWidth) => {
     for (colIndex = 0; colIndex < mazeWidth; colIndex++) {
       // create a column
       let col = document.createElement("td");
-      if (rowIndex == 0 && colIndex == 0) {
-        col.style.backgroundColor = "rgb(0,255,0)";
-        col.setAttribute("type", "start");
-      } else if (rowIndex === mazeHeight - 1 && colIndex === mazeWidth - 1) {
-        col.style.backgroundColor = "rgb(0,255,0)";
-        col.setAttribute("type", "finish");
-      } else {
-        col.style.backgroundColor = "rgb(255,255,255)";
-      }
+      // if (rowIndex == 0 && colIndex == 0) {
+      //   col.style.backgroundColor = "rgb(0,255,0)";
+      //   col.setAttribute("type", "start");
+      // } else if (rowIndex === mazeHeight - 1 && colIndex === mazeWidth - 1) {
+      //   col.style.backgroundColor = "rgb(0,255,0)";
+      //   col.setAttribute("type", "finish");
+      // } else {
+      //   col.style.backgroundColor = "rgb(255,255,255)";
+      // }
+      col.style.backgroundColor = "rgb(255,255,255)";
       col.setAttribute("id", "cell_" + rowIndex + "_" + colIndex);
 
       row.appendChild(col);
