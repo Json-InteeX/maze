@@ -7,14 +7,25 @@ class Cell {
     possibleMoves,
     callback = renderNoed
   ) {
-    this.childs = [];
     this.parent = parent;
+    this.childs = [];
     this.parentPosition = parentPosition;
     this.x = x;
     this.y = y;
     this.possibleMoves = possibleMoves;
     callback && callback(parent, this);
   }
+
+  deleteMove = (move) => {
+    this.possibleMoves = this.possibleMoves.filter((m) => m !== move);
+  };
+
+  /**
+   * Choose one random move from possible moves
+   * @returns {"top" | "bottom" | "right" | "left" } "top" | "bottom" | "right" | "left"
+   */
+  chooseMove = () =>
+    this.possibleMoves[Math.floor(Math.random() * this.possibleMoves.length)];
 }
 
 const deleteBorder = (row, column, border) =>
@@ -34,7 +45,7 @@ const fillMatrix = (COLS, ROWS) => {
   return matrix;
 };
 
-async function sleep(ms) {
+function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -89,42 +100,27 @@ const isPossibleMove = (x, y) => {
  * @returns
  */
 const generateMaze = async (cell) => {
-  while (true) {
+  while (cell.parent || cell.possibleMoves.length > 0) {
     // /!\ uncoment next line to see animation /!\
     // await sleep(0);
     visitedCells[cell.x][cell.y] = 1;
     //check possible Moves
-    if (!isPossibleMove(cell.x - 1, cell.y))
-      cell.possibleMoves = cell.possibleMoves.filter(
-        (move) => move !== MOVES.LEFT
-      );
-    if (!isPossibleMove(cell.x + 1, cell.y))
-      cell.possibleMoves = cell.possibleMoves.filter(
-        (move) => move !== MOVES.RIGHT
-      );
-    if (!isPossibleMove(cell.x, cell.y - 1))
-      cell.possibleMoves = cell.possibleMoves.filter(
-        (move) => move !== MOVES.TOP
-      );
-    if (!isPossibleMove(cell.x, cell.y + 1))
-      cell.possibleMoves = cell.possibleMoves.filter(
-        (move) => move !== MOVES.BOTTOM
-      );
+    if (!isPossibleMove(cell.x - 1, cell.y)) cell.deleteMove(MOVES.LEFT);
+    if (!isPossibleMove(cell.x + 1, cell.y)) cell.deleteMove(MOVES.RIGHT);
+    if (!isPossibleMove(cell.x, cell.y - 1)) cell.deleteMove(MOVES.TOP);
+    if (!isPossibleMove(cell.x, cell.y + 1)) cell.deleteMove(MOVES.BOTTOM);
 
     // if there is no possible moves, then back track!
     if (cell.possibleMoves.length === 0) {
-      if (!cell.parent) return; // the maze is generated wih success!
       renderNoed(cell, cell.parent);
       cell = cell.parent;
       continue;
     }
 
     // chose one move randomly from possible moves
-    const chosedMove =
-      cell.possibleMoves[Math.floor(Math.random() * cell.possibleMoves.length)];
-    cell.possibleMoves = cell.possibleMoves.filter(
-      (move) => move !== chosedMove
-    );
+    const chosedMove = cell.chooseMove();
+    cell.deleteMove(chosedMove);
+
     let nextCell = null,
       x = cell.x,
       y = cell.y;
@@ -141,6 +137,7 @@ const generateMaze = async (cell) => {
       case "top":
         y = y - 1;
         break;
+      default: return;
     }
     // create a new Cell and link it to it's parent!
     nextCell = new Cell(cell, oppsitDirection[chosedMove], x, y, possibleMoves);
