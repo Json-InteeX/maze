@@ -1,5 +1,5 @@
-const COLS = 15;
-const ROWS = 15;
+const COLS = 50;
+const ROWS = 50;
 
 const START = {
   X: 3,

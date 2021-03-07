@@ -95,85 +95,90 @@ const isPossibleMove = (x, y) => {
  * @returns
  */
 const generateTree = async (noed) => {
-  await sleep(10);
-  visitedCells[noed.x][noed.y] = 1;
-  //check possible Moves
-  if (!isPossibleMove(noed.x - 1, noed.y))
+  while (true) {
+    await sleep(0);
+
+    visitedCells[noed.x][noed.y] = 1;
+    //check possible Moves
+    if (!isPossibleMove(noed.x - 1, noed.y))
+      noed.possibleMoves = noed.possibleMoves.filter(
+        (move) => move !== MOVES.LEFT
+      );
+    if (!isPossibleMove(noed.x + 1, noed.y))
+      noed.possibleMoves = noed.possibleMoves.filter(
+        (move) => move !== MOVES.RIGHT
+      );
+    if (!isPossibleMove(noed.x, noed.y - 1))
+      noed.possibleMoves = noed.possibleMoves.filter(
+        (move) => move !== MOVES.TOP
+      );
+    if (!isPossibleMove(noed.x, noed.y + 1))
+      noed.possibleMoves = noed.possibleMoves.filter(
+        (move) => move !== MOVES.BOTTOM
+      );
+    if (noed.possibleMoves.length === 0) {
+      if (!noed.parent) return;
+      renderNoed(noed, noed.parent);
+      noed = noed.parent;
+      continue;
+    }
+
+    //generate childrens
+    const randomDirection =
+      noed.possibleMoves[Math.floor(Math.random() * noed.possibleMoves.length)];
     noed.possibleMoves = noed.possibleMoves.filter(
-      (move) => move !== MOVES.LEFT
+      (move) => move !== randomDirection
     );
-  if (!isPossibleMove(noed.x + 1, noed.y))
-    noed.possibleMoves = noed.possibleMoves.filter(
-      (move) => move !== MOVES.RIGHT
-    );
-  if (!isPossibleMove(noed.x, noed.y - 1))
-    noed.possibleMoves = noed.possibleMoves.filter(
-      (move) => move !== MOVES.TOP
-    );
-  if (!isPossibleMove(noed.x, noed.y + 1))
-    noed.possibleMoves = noed.possibleMoves.filter(
-      (move) => move !== MOVES.BOTTOM
-    );
-  if (noed.possibleMoves.length === 0) {
-    if (!noed.parent) return;
-    renderNoed(noed, noed.parent);
-    return generateTree(noed.parent);
+    let nextNoed = null;
+    switch (randomDirection) {
+      case "right":
+        nextNoed = new Noed(
+          noed,
+          oppsitDirection[randomDirection],
+          noed.x + 1,
+          noed.y,
+          possibleMoves
+        );
+        break;
+
+      case "bottom":
+        nextNoed = new Noed(
+          noed,
+          oppsitDirection[randomDirection],
+          noed.x,
+          noed.y + 1,
+          possibleMoves
+        );
+        break;
+
+      case "left":
+        nextNoed = new Noed(
+          noed,
+          oppsitDirection[randomDirection],
+          noed.x - 1,
+          noed.y,
+          possibleMoves
+        );
+        break;
+      case "top":
+        nextNoed = new Noed(
+          noed,
+          oppsitDirection[randomDirection],
+          noed.x,
+          noed.y - 1,
+          possibleMoves
+        );
+        break;
+    }
+
+    noed.childs = [...noed.childs, nextNoed];
+    noed = nextNoed;
   }
-  //generate childrens
-  const randomDirection =
-    noed.possibleMoves[Math.floor(Math.random() * noed.possibleMoves.length)];
-  noed.possibleMoves = noed.possibleMoves.filter(
-    (move) => move !== randomDirection
-  );
-  let nextNoed = null;
-  switch (randomDirection) {
-    case "right":
-      nextNoed = new Noed(
-        noed,
-        oppsitDirection[randomDirection],
-        noed.x + 1,
-        noed.y,
-        possibleMoves
-      );
-      break;
-
-    case "bottom":
-      nextNoed = new Noed(
-        noed,
-        oppsitDirection[randomDirection],
-        noed.x,
-        noed.y + 1,
-        possibleMoves
-      );
-      break;
-
-    case "left":
-      nextNoed = new Noed(
-        noed,
-        oppsitDirection[randomDirection],
-        noed.x - 1,
-        noed.y,
-        possibleMoves
-      );
-      break;
-    case "top":
-      nextNoed = new Noed(
-        noed,
-        oppsitDirection[randomDirection],
-        noed.x,
-        noed.y - 1,
-        possibleMoves
-      );
-      break;
-  }
-
-  noed.childs = [...noed.childs, nextNoed];
-  return generateTree(nextNoed);
 };
 
 createBlankMaze(ROWS, COLS);
 fillMatrix();
 const possibleMoves = Object.values(MOVES);
-const root = new Noed(null, null, START.X, START.Y, possibleMoves);
+const root = new Noed(null, null, 0, 0, possibleMoves);
 generateTree(root);
 console.log(root);
