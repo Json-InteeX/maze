@@ -1,15 +1,5 @@
-const COLS = 50;
-const ROWS = 50;
-
-const START = {
-  X: 3,
-  Y: 0,
-};
-
-const END = {
-  X: 4,
-  Y: ROWS - 1,
-};
+const COLS = 10;
+const ROWS = 10;
 
 const MOVES = {
   TOP: "top",

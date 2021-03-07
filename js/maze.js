@@ -1,10 +1,4 @@
-class Noed {
-  childs;
-  x;
-  y;
-  parentPosition;
-  parent;
-  possibleMoves;
+class Cell {
   constructor(
     parent,
     parentPosition,
@@ -23,54 +17,54 @@ class Noed {
   }
 }
 
-let visitedCells = [];
-
 const deleteBorder = (row, column, border) =>
   (document.getElementById("cell_" + row + "_" + column).style[
     `border-${border}`
   ] = "none");
 
-const fillMatrix = () => {
-  for (let i = 0; i < COLS; i++) {
-    visitedCells[i] = new Array(ROWS).fill(0);
-  }
+/**
+ * create a matrix filled out with 0
+ * @param {number} COLS
+ * @param {number} ROWS
+ * @returns Matrix [][]
+ */
+const fillMatrix = (COLS, ROWS) => {
+  let matrix = [];
+  for (let i = 0; i < COLS; i++) matrix[i] = new Array(ROWS).fill(0);
+  return matrix;
 };
 
 async function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
 /**
- *
- * @param {Noed} from
- * @param {Noed} to
+ * get the previous cell position by calculating coordinates
+ * @param {Cell} from
+ * @param {Cell} to
  */
 function getPreviousPosition(from, to) {
   if (from.x > to.x) return MOVES.RIGHT;
   if (from.x < to.x) return MOVES.LEFT;
   if (from.y > to.y) return MOVES.BOTTOM;
   if (from.y < to.y) return MOVES.TOP;
-  console.log("why..?");
 }
+
 /**
- * @param {Noed} noed
+ * @param {Cell} cell
  */
 const renderNoed = (from, to) => {
-  currentCell = document.getElementById("cell_" + to.y + "_" + to.x);
+  const currentCell = document.getElementById("cell_" + to.y + "_" + to.x);
   currentCell.style.backgroundColor = "#ff0000";
-
-  //Green color for the start and the end of the maze
-  if (to.y == START.Y && to.x == START.X) {
-    currentCell.style.backgroundColor = "rgb(0,255,0)";
+  // start Cell Color
+  if (to.y == 0 && to.x == 0) {
+    currentCell.style.backgroundColor = "#B0AFAF";
     currentCell.setAttribute("type", "start");
-  } else if (to.y === END.Y && to.x === END.X) {
-    currentCell.style.backgroundColor = "rgb(0,255,0)";
-    currentCell.setAttribute("type", "finish");
   }
-
   if (!from) return;
 
-  let fromPosition = getPreviousPosition(from, to);
-  let preveCell = document.getElementById("cell_" + from.y + "_" + from.x);
+  const fromPosition = getPreviousPosition(from, to);
+  const preveCell = document.getElementById("cell_" + from.y + "_" + from.x);
   preveCell.style.backgroundColor = "#B0AFAF";
 
   deleteBorder(from.y, from.x, oppsitDirection[fromPosition]);
@@ -91,94 +85,73 @@ const isPossibleMove = (x, y) => {
 
 /**
  *
- * @param {Noed} noed current
+ * @param {Cell} cell current
  * @returns
  */
-const generateTree = async (noed) => {
+const generateMaze = async (cell) => {
   while (true) {
-    await sleep(0);
-
-    visitedCells[noed.x][noed.y] = 1;
+    // /!\ uncoment next line to see animation /!\
+    // await sleep(0);
+    visitedCells[cell.x][cell.y] = 1;
     //check possible Moves
-    if (!isPossibleMove(noed.x - 1, noed.y))
-      noed.possibleMoves = noed.possibleMoves.filter(
+    if (!isPossibleMove(cell.x - 1, cell.y))
+      cell.possibleMoves = cell.possibleMoves.filter(
         (move) => move !== MOVES.LEFT
       );
-    if (!isPossibleMove(noed.x + 1, noed.y))
-      noed.possibleMoves = noed.possibleMoves.filter(
+    if (!isPossibleMove(cell.x + 1, cell.y))
+      cell.possibleMoves = cell.possibleMoves.filter(
         (move) => move !== MOVES.RIGHT
       );
-    if (!isPossibleMove(noed.x, noed.y - 1))
-      noed.possibleMoves = noed.possibleMoves.filter(
+    if (!isPossibleMove(cell.x, cell.y - 1))
+      cell.possibleMoves = cell.possibleMoves.filter(
         (move) => move !== MOVES.TOP
       );
-    if (!isPossibleMove(noed.x, noed.y + 1))
-      noed.possibleMoves = noed.possibleMoves.filter(
+    if (!isPossibleMove(cell.x, cell.y + 1))
+      cell.possibleMoves = cell.possibleMoves.filter(
         (move) => move !== MOVES.BOTTOM
       );
-    if (noed.possibleMoves.length === 0) {
-      if (!noed.parent) return;
-      renderNoed(noed, noed.parent);
-      noed = noed.parent;
+
+    // if there is no possible moves, then back track!
+    if (cell.possibleMoves.length === 0) {
+      if (!cell.parent) return; // the maze is generated wih success!
+      renderNoed(cell, cell.parent);
+      cell = cell.parent;
       continue;
     }
 
-    //generate childrens
-    const randomDirection =
-      noed.possibleMoves[Math.floor(Math.random() * noed.possibleMoves.length)];
-    noed.possibleMoves = noed.possibleMoves.filter(
-      (move) => move !== randomDirection
+    // chose one move randomly from possible moves
+    const chosedMove =
+      cell.possibleMoves[Math.floor(Math.random() * cell.possibleMoves.length)];
+    cell.possibleMoves = cell.possibleMoves.filter(
+      (move) => move !== chosedMove
     );
-    let nextNoed = null;
-    switch (randomDirection) {
+    let nextCell = null,
+      x = cell.x,
+      y = cell.y;
+    switch (chosedMove) {
       case "right":
-        nextNoed = new Noed(
-          noed,
-          oppsitDirection[randomDirection],
-          noed.x + 1,
-          noed.y,
-          possibleMoves
-        );
+        x = x + 1;
         break;
-
       case "bottom":
-        nextNoed = new Noed(
-          noed,
-          oppsitDirection[randomDirection],
-          noed.x,
-          noed.y + 1,
-          possibleMoves
-        );
+        y = y + 1;
         break;
-
       case "left":
-        nextNoed = new Noed(
-          noed,
-          oppsitDirection[randomDirection],
-          noed.x - 1,
-          noed.y,
-          possibleMoves
-        );
+        x = x - 1;
         break;
       case "top":
-        nextNoed = new Noed(
-          noed,
-          oppsitDirection[randomDirection],
-          noed.x,
-          noed.y - 1,
-          possibleMoves
-        );
+        y = y - 1;
         break;
     }
-
-    noed.childs = [...noed.childs, nextNoed];
-    noed = nextNoed;
+    // create a new Cell and link it to it's parent!
+    nextCell = new Cell(cell, oppsitDirection[chosedMove], x, y, possibleMoves);
+    cell.childs = [...cell.childs, nextCell];
+    cell = nextCell;
   }
 };
 
 createBlankMaze(ROWS, COLS);
-fillMatrix();
+// create a matrix that represents our grid
+let visitedCells = fillMatrix(ROWS, COLS);
 const possibleMoves = Object.values(MOVES);
-const root = new Noed(null, null, 0, 0, possibleMoves);
-generateTree(root);
-console.log(root);
+const root = new Cell(null, null, 0, 0, possibleMoves);
+generateMaze(root);
