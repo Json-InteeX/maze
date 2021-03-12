@@ -30,8 +30,8 @@ class Cell {
 
 const deleteBorder = (row, column, border) =>
   (document.getElementById("cell_" + row + "_" + column).style[
-    `border-${border}`
-  ] = "none");
+    `border-${border}-color`
+  ] = COLORS.litegray);
 
 /**
  * create a matrix filled out with 0
@@ -66,17 +66,17 @@ function getPreviousPosition(from, to) {
  */
 const renderNoed = (from, to) => {
   const currentCell = document.getElementById("cell_" + to.y + "_" + to.x);
-  currentCell.style.backgroundColor = "#ff0000";
+  currentCell.style.backgroundColor = COLORS.RED;
   // start Cell Color
   if (to.y == 0 && to.x == 0) {
-    currentCell.style.backgroundColor = "#B0AFAF";
+    currentCell.style.backgroundColor = COLORS.litegray;
     currentCell.setAttribute("type", "start");
   }
   if (!from) return;
 
   const fromPosition = getPreviousPosition(from, to);
   const preveCell = document.getElementById("cell_" + from.y + "_" + from.x);
-  preveCell.style.backgroundColor = "#B0AFAF";
+  preveCell.style.backgroundColor = COLORS.litegray;
 
   deleteBorder(from.y, from.x, oppsitDirection[fromPosition]);
   deleteBorder(to.y, to.x, fromPosition);

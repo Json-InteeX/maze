@@ -14,3 +14,9 @@ const oppsitDirection = {
   left: MOVES.RIGHT,
   top: MOVES.BOTTOM,
 };
+
+const COLORS ={
+  litegray: "#B0AFAF",
+  red: "#ff0000",
+  black: "#000000"
+}
