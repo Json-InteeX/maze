@@ -1,22 +1,22 @@
-const COLS = 10;
-const ROWS = 10;
+export const COLS = 100;
+export const ROWS = 50;
 
-const MOVES = {
+export const MOVES = {
   TOP: "top",
   BOTTOM: "bottom",
   RIGHT: "right",
   LEFT: "left",
 };
 
-const oppsitDirection = {
+export const oppsitDirection = {
   right: MOVES.LEFT,
   bottom: MOVES.TOP,
   left: MOVES.RIGHT,
   top: MOVES.BOTTOM,
 };
 
-const COLORS ={
+export const COLORS = {
   litegray: "#B0AFAF",
   red: "#ff0000",
-  black: "#000000"
-}
+  black: "#000000",
+};
