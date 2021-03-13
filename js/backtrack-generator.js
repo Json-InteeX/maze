@@ -1,5 +1,6 @@
 import { renderNoed } from "./sceen.js";
 import { MOVES, ROWS, COLS, oppsitDirection } from "./constants.js";
+import { selectRandomElement, sleep } from "./utils/helpers.js";
 /**
  *
  */
@@ -30,8 +31,8 @@ export class Backtrackgenerator {
    * @param {number} y
    * @returns
    */
-  generate = async (x = 0, y = 0) => {
-    let cell = new Cell(null, null, x, y, Object.values(MOVES), renderNoed);
+  generate = async () => {
+    let cell = new Cell(null, null, this.xStart, this.yStart, Object.values(MOVES), renderNoed);
     this.root = cell;
     while (cell.parent || cell.possibleMoves.length > 0) {
       // /!\ uncoment next line to see animation /!\
@@ -122,7 +123,5 @@ class Cell {
    * @returns {"top" | "bottom" | "right" | "left" } "top" | "bottom" | "right" | "left"
    */
   chooseMove = () =>
-    this.possibleMoves[Math.floor(Math.random() * this.possibleMoves.length)];
+    selectRandomElement(this.possibleMoves)
 }
-
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
