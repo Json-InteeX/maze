@@ -24,18 +24,18 @@ export const drawGrid = (rows, cols) => {
 };
 
 const deleteBorder = (row, column, border) =>
-  (document.getElementById("cell_" + row + "_" + column).style[
-    `border-${border}-color`
-  ] = COLORS.litegray);
+(document.getElementById("cell_" + row + "_" + column).style[
+  `border-${border}-color`
+] = COLORS.litegray);
 /**
  *
  * @param {*} from
  * @param {*} to
  * @returns
  */
-export const renderNoed = (from, to) => {
+export const renderNoed = (from, to, headColor = COLORS.red) => {
   const currentCell = document.getElementById("cell_" + to.y + "_" + to.x);
-  currentCell.style.backgroundColor = COLORS.red;
+  currentCell.style.backgroundColor = headColor;
   // start Cell Color
   if (to.y == 0 && to.x == 0) {
     currentCell.style.backgroundColor = COLORS.litegray;
