@@ -24,9 +24,9 @@ export const drawGrid = (rows, cols) => {
 };
 
 const deleteBorder = (row, column, border) =>
-(document.getElementById("cell_" + row + "_" + column).style[
-  `border-${border}-color`
-] = COLORS.litegray);
+  (document.getElementById("cell_" + row + "_" + column).style[
+    `border-${border}-color`
+  ] = COLORS.litegray);
 /**
  *
  * @param {*} from
@@ -61,4 +61,11 @@ const getPreviousPosition = (from, to) => {
   if (from.x < to.x) return MOVES.LEFT;
   if (from.y > to.y) return MOVES.BOTTOM;
   if (from.y < to.y) return MOVES.TOP;
+};
+
+export const setContent = (row, col, content) => {
+  const cell = document.getElementById("cell_" + row + "_" + col);
+  cell.innerHTML += content;
+  cell.style.backgroundColor = "rgb(255,255,255)";
+  cell.style.textAlign = "center";
 };
