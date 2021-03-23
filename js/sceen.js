@@ -33,9 +33,9 @@ const deleteBorder = (row, column, border) =>
  * @param {*} to
  * @returns
  */
-export const renderNoed = (from, to) => {
+export const renderNoed = (from, to, headColor = COLORS.red) => {
   const currentCell = document.getElementById("cell_" + to.y + "_" + to.x);
-  currentCell.style.backgroundColor = COLORS.red;
+  currentCell.style.backgroundColor = headColor;
   // start Cell Color
   if (to.y == 0 && to.x == 0) {
     currentCell.style.backgroundColor = COLORS.litegray;
@@ -61,4 +61,11 @@ const getPreviousPosition = (from, to) => {
   if (from.x < to.x) return MOVES.LEFT;
   if (from.y > to.y) return MOVES.BOTTOM;
   if (from.y < to.y) return MOVES.TOP;
+};
+
+export const setContent = (row, col, content) => {
+  const cell = document.getElementById("cell_" + row + "_" + col);
+  cell.innerHTML += content;
+  cell.style.backgroundColor = "rgb(255,255,255)";
+  cell.style.textAlign = "center";
 };
