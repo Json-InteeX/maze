@@ -1,6 +1,6 @@
-import { COLORS, MOVES } from "./constants.js";
-import { renderNoed } from "./sceen.js";
-import { selectRandomElement, sleep } from "./utils/helpers.js";
+import { COLORS, MOVES } from "../constants.js";
+import { renderNoed } from "../sceen.js";
+import { selectRandomElement, sleep } from "../utils/helpers.js";
 
 /**
  * A binary tree maze is a standard orthogonal maze where each cell 

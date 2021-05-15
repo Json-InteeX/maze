@@ -1,6 +1,6 @@
-import { renderNoed } from "./sceen.js";
-import { MOVES, ROWS, COLS, oppsitDirection } from "./constants.js";
-import { selectRandomElement, sleep } from "./utils/helpers.js";
+import { renderNoed } from "../sceen.js";
+import { MOVES, ROWS, COLS, oppsitDirection } from "../constants.js";
+import { selectRandomElement, sleep } from "../utils/helpers.js";
 /**
  *
  */
