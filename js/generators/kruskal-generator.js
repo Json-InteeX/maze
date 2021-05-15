@@ -1,6 +1,6 @@
-import { COLORS } from "./constants.js";
-import { renderNoed, setContent } from "./sceen.js";
-import { randomIndex, sleep } from "./utils/helpers.js";
+import { COLORS } from "../constants.js";
+import { renderNoed, setContent } from "../sceen.js";
+import { randomIndex, sleep } from "../utils/helpers.js";
 
 class Node {
   /**

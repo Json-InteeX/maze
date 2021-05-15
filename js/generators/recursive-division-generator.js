@@ -1,6 +1,5 @@
-import { COLORS, MOVES } from "./constants.js";
-import { drawLine, renderNoed } from "./sceen.js";
-import { selectRandomElement, sleep } from "./utils/helpers.js";
+import { drawLine } from "../sceen.js";
+import {  sleep } from "../utils/helpers.js";
 
 /**
  * 

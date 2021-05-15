@@ -20,3 +20,11 @@ export const COLORS = {
   red: "#ff0000",
   black: "#000000",
 };
+
+
+export const GENERATOR = {
+ BINARY : "binary-tree",
+ KRUSKAL : "kruskal",
+ RECURSIVE_DIVISION : "recursive-division",
+ BACKTRACK : "backtrack",
+}
