@@ -1,9 +1,8 @@
-import { Backtrackgenerator } from "./backtrack-generator.js";
+import * as Factory from "./factoryMethode.js";
 import { drawGrid } from "./sceen.js";
-import { COLS, ROWS } from "./constants.js";
-import { BinaryTreeGenerator } from "./linear-generator.js";
-import { KruskalGenerator } from "./kruskal-generator.js";
+import { COLS, GENERATOR, ROWS } from "./constants.js";
+
 
 drawGrid(ROWS, COLS);
-let generator = new KruskalGenerator(ROWS, COLS, 0, 0, 0, 0);
+let generator = Factory.createGenerator(GENERATOR.BACKTRACK, ROWS, COLS);
 generator.generate();

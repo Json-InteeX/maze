@@ -24,9 +24,9 @@ export const drawGrid = (rows, cols) => {
 };
 
 const deleteBorder = (row, column, border) =>
-  (document.getElementById("cell_" + row + "_" + column).style[
-    `border-${border}-color`
-  ] = COLORS.litegray);
+(document.getElementById("cell_" + row + "_" + column).style[
+  `border-${border}-color`
+] = COLORS.litegray);
 /**
  *
  * @param {*} from
@@ -69,3 +69,26 @@ export const setContent = (row, col, content) => {
   cell.style.backgroundColor = "rgb(255,255,255)";
   cell.style.textAlign = "center";
 };
+/**
+ * 
+ * @param {boolean} isVertical 
+ * @param {any} cell
+ */
+export const drawLine = (from, to, hole, isVertical) => {
+  for (let i = from; i < to; i++) {
+    if (isVertical) {
+      deleteBorder(i, hole.x - 1, "right")
+    } else deleteBorder(hole.y - 1, i, "bottom")
+  }
+
+  if (isVertical)
+    document.getElementById("cell_" + hole.y + "_" + (hole.x - 1)).style[
+      `border-right-color`
+    ] = COLORS.black;
+
+  if (!isVertical)
+    document.getElementById("cell_" + (hole.y - 1) + "_" + hole.x).style[
+      `border-bottom-color`
+    ] = COLORS.black;
+
+}
