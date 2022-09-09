@@ -1,5 +1,4 @@
-import { UnionFind } from "../kruskal-generator.js";
-// const { UnionFind } = require('../wall-fusion.js');
+import { UnionFind } from "../generators/kruskal-generator";
 
 test("is same classe", () => {
   const unionFind = new UnionFind();
